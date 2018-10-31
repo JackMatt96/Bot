@@ -17,7 +17,7 @@ def error(bot, update, error):
 
 if __name__ == "__main__":
     # Set these variable to the appropriate values
-    TOKEN = int(os.environ.get('TELEGRAM_TOKEN'))
+    TOKEN = os.environ.get('TELEGRAM_TOKEN')
     NAME = "first-jack-bot"
 
     # Port is given by Heroku
