@@ -120,6 +120,9 @@ if __name__ == "__main__":
     dp.add_handler(MessageHandler(Filters.text, replay)) 
     dp.add_error_handler(error)
     id = (None, None)
+    if not os.path.exists('Temp'):
+        os.makedirs('Temp')
+
 
     # Start the webhook
     updater.start_webhook(listen="0.0.0.0",
