@@ -122,7 +122,7 @@ if __name__ == "__main__":
     
     dp.add_handler(MessageHandler(Filters.text, replay)) 
     dp.add_error_handler(error)
-    id = (None, None)
+    id = [None] * 2
     if not os.path.exists('Temp'):
         os.makedirs('Temp')
 
