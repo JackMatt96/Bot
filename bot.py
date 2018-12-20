@@ -25,7 +25,7 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 def merge_photo(bot, update):
-    File = bot.get_File(update.effective_message.photo[-1].file_id)
+    File = bot.get_file(update.effective_message.photo[-1].file_id)
     if(id[0]==None):
         id[0] = 'Temp/'+str(File.id)+'.jpg'
         update.effective_message.reply_text(id[0])
