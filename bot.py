@@ -12,7 +12,7 @@ def start(bot, update):
 
 def start_merge(bot, update):
     update.effective_message.reply_text("Starting merging session!")
-    dp.add_handler(MessageHandler(Filters.text, merge_photo))
+    dp.add_handler(MessageHandler(Filters.photo, merge_photo))
 
 def stop_merge(bot, update):
     update.effective_message.reply_text("Stopping merging session!")
