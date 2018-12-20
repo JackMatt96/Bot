@@ -28,11 +28,11 @@ def merge_photo(bot, update):
     File = bot.get_File(update.effective_message.photo[-1].file_id)
     if(id[0]==None):
         id[0] = 'Temp/'+str(File.id)+'.jpg'
-	update.effective_message.reply_text(id[0])
+        update.effective_message.reply_text(id[0])
         File.download(id[0])
     else:
         id[1] = 'Temp/'+str(File.id)+'.jpg'
-	update.effective_message.reply_text(id[1])
+        update.effective_message.reply_text(id[1])
         File.download(id[1])
 
         match, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
