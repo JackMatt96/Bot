@@ -1,3 +1,4 @@
+print('Start')
 import logging
 import os
 import cv2
@@ -123,10 +124,10 @@ if __name__ == "__main__":
     if not os.path.exists('Temp'):
         os.makedirs('Temp')
 
-
     # Start the webhook
     updater.start_webhook(listen="0.0.0.0",
                           port=int(PORT),
                           url_path=TOKEN)
     updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
     updater.idle()
+    print('Ready')
