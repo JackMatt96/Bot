@@ -98,7 +98,7 @@ def stitching_images(image1, image2):
     
     return imMatches, warpImages(image2, image1, H)
 
-
+id = [None] * 2
 if __name__ == "__main__":
     # Set these variable to the appropriate values
     TOKEN = os.environ.get('TELEGRAM_TOKEN')
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     
     dp.add_handler(MessageHandler(Filters.text, replay)) 
     dp.add_error_handler(error)
-    id = [None] * 2
+
     if not os.path.exists('Temp'):
         os.makedirs('Temp')
 
