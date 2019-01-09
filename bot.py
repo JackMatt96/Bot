@@ -28,11 +28,11 @@ def merge_photo(bot, update):
     global id
     File = bot.get_file(update.effective_message.photo[-1].file_id)
     if(id[0]==None):
-        id[0] = 'Temp/'+str(File.id)+'.jpg'
+        id[0] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[0])
         File.download(id[0])
     else:
-        id[1] = 'Temp/'+str(File.id)+'.jpg'
+        id[1] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[1])
         File.download(id[1])
 
