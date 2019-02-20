@@ -1,4 +1,3 @@
-print('Start')
 import logging
 import os
 import cv2
@@ -25,14 +24,13 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 def merge_photo(bot, update):
-    global id
-    File = bot.get_file(update.effective_message.photo[-1].file_id)
+    File = bot.get_File(update.effective_message.photo[-1].file_id)
     if(id[0]==None):
-        id[0] = 'Temp/'+str(File.file_id)+'.jpg'
+        id[0] = 'Temp/'+str(File.id)+'.jpg'
         update.effective_message.reply_text(id[0])
         File.download(id[0])
     else:
-        id[1] = 'Temp/'+str(File.file_id)+'.jpg'
+        id[1] = 'Temp/'+str(File.id)+'.jpg'
         update.effective_message.reply_text(id[1])
         File.download(id[1])
 
@@ -49,24 +47,24 @@ def merge_photo(bot, update):
 MAX_FEATURES = 500
 K = 4
 def warpImages(img1, img2, H):
-    rows1, cols1 = img1.shape[:2]
-    rows2, cols2 = img2.shape[:2]
-    
-    list_of_points_1 = np.float32([[0,0], [0,rows1], [cols1, rows1], [cols1,0]]).reshape(-1,1,2)
-    temp_points = np.float32([[0,0], [0,rows2], [cols2, rows2], [cols2,0]]).reshape(-1,1,2)
-    
-    list_of_points_2 = cv2.perspectiveTransform(temp_points, H)
-    list_of_points = np.concatenate((list_of_points_1, list_of_points_2), axis=0)
-    
-    [x_min, y_min] = np.int32(list_of_points.min(axis=0).ravel() - 0.5)
-    [x_max, y_max] = np.int32(list_of_points.max(axis=0).ravel() + 0.5)
-    
-    translation_dist = [-x_min, -y_min]
-    H_translation = np.array([[1, 0, translation_dist[0]], [0, 1, translation_dist[1]], [0,0,1]])
-    
-    output_img = cv2.warpPerspective(img2, H_translation.dot(H), (x_max - x_min, y_max - y_min))
-    output_img[translation_dist[1]:rows1+translation_dist[1],translation_dist[0]:cols1+translation_dist[0]] = img1
-    return output_img
+	rows1, cols1 = img1.shape[:2]
+	rows2, cols2 = img2.shape[:2]
+
+	list_of_points_1 = np.float32([[0,0], [0,rows1], [cols1, rows1], [cols1,0]]).reshape(-1,1,2)
+	temp_points = np.float32([[0,0], [0,rows2], [cols2, rows2], [cols2,0]]).reshape(-1,1,2)
+
+	list_of_points_2 = cv2.perspectiveTransform(temp_points, H)
+	list_of_points = np.concatenate((list_of_points_1, list_of_points_2), axis=0)
+
+	[x_min, y_min] = np.int32(list_of_points.min(axis=0).ravel() - 0.5)
+	[x_max, y_max] = np.int32(list_of_points.max(axis=0).ravel() + 0.5)
+
+	translation_dist = [-x_min, -y_min]
+	H_translation = np.array([[1, 0, translation_dist[0]], [0, 1, translation_dist[1]], [0,0,1]])
+
+	output_img = cv2.warpPerspective(img2, H_translation.dot(H), (x_max - x_min, y_max - y_min))
+	output_img[translation_dist[1]:rows1+translation_dist[1],translation_dist[0]:cols1+translation_dist[0]] = img1
+	return output_img
 
 
 
@@ -89,7 +87,7 @@ def stitching_images(image1, image2):
             good.append(m)
     match = np.asarray(good)
     
-    if len(match[:,0]) >= 4:
+    if len(match[:][0]) >= 4:
         src = np.float32([ kp1[m.queryIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
         dst = np.float32([ kp2[m.trainIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
 
@@ -99,7 +97,7 @@ def stitching_images(image1, image2):
     
     return imMatches, warpImages(image2, image1, H)
 
-id = [None] * 2
+
 if __name__ == "__main__":
     # Set these variable to the appropriate values
     TOKEN = os.environ.get('TELEGRAM_TOKEN')
@@ -123,7 +121,7 @@ if __name__ == "__main__":
     
     dp.add_handler(MessageHandler(Filters.text, replay)) 
     dp.add_error_handler(error)
-
+    id = (None, None)
     if not os.path.exists('Temp'):
         os.makedirs('Temp')
 
@@ -133,4 +131,3 @@ if __name__ == "__main__":
                           url_path=TOKEN)
     updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
     updater.idle()
-    print('Ready')
