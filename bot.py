@@ -91,8 +91,8 @@ def stitching_images(image1, image2):
     good = np.asarray(good)
     
     print(len(good))
-    src = np.float32([ kp1[m.queryIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
-    dst = np.float32([ kp2[m.trainIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
+    src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
+    dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
 
     imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)    
 
