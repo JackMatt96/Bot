@@ -90,7 +90,7 @@ def stitching_images(image1, image2):
             good.append(m)
     good = np.asarray(good)
     
-    print(len(match))
+    print(len(good))
     src = np.float32([ kp1[m.queryIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
     dst = np.float32([ kp2[m.trainIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
 
