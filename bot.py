@@ -44,8 +44,8 @@ def merge_photo(bot, update):
         nameFileMatch = 'Temp/' + str(update.effective_chat.id) + '_Match.jpg'
         cv2.imwrite(nameFile, toSend)
         cv2.imwrite(nameFileMatch, toSendMatch)
-        update.effective_message.send_Photo(photo = open(nameFile,'rb'))
-        update.effective_message.send_Photo(photo = open(nameFileMatch,'rb'))
+        update.effective_message.reply_photo(photo = open(nameFile,'rb'))
+        update.effective_message.reply_photo(photo = open(nameFileMatch,'rb'))
         id = (None, None)
 
 
