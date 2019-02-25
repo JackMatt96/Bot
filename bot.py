@@ -9,14 +9,17 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 def start(bot, update):
     update.effective_message.reply_text("Hi!")
+    print('Comand /Start received')
 
 def start_merge(bot, update):
     update.effective_message.reply_text("Starting merging session!")
     dp.add_handler(MessageHandler(Filters.photo, merge_photo))
+    print('Comand /Start_merge received')
 
 def stop_merge(bot, update):
     update.effective_message.reply_text("Stopping merging session!")
     dp.remove_handler(merge_photo)
+    print('Comand /Stop_merge received')
 
 def replay(bot, update):
     update.effective_message.reply_text("Hai detto " +update.effective_message.text)
@@ -85,13 +88,13 @@ def stitching_images(image1, image2):
     for m in matches:
         if m[0].distance < 0.5*m[1].distance:
             good.append(m)
-    match = np.asarray(good)
+    good = np.asarray(good)
     
     print(len(match))
     src = np.float32([ kp1[m.queryIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
     dst = np.float32([ kp2[m.trainIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
 
-    imMatches = cv2.drawMatchesKnn(image1, src, image2, dst, matches, None)    
+    imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)    
 
     H, masked = cv2.findHomography(src, dst, cv2.RANSAC, 5.0)
     
