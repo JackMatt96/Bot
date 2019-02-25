@@ -39,7 +39,7 @@ def merge_photo(bot, update):
         update.effective_message.reply_text(id[1])
         File.download(id[1])
 
-        match, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
+        toSendMatch, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
         nameFile = 'Temp/' + str(update.effective_chat.id) + '.jpg'
         nameFileMatch = 'Temp/' + str(update.effective_chat.id) + '_Match.jpg'
         cv2.imwrite(nameFile, toSend)
