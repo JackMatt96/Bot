@@ -88,7 +88,7 @@ def stitching_images(image1, image2):
     for m in matches:
         if m[0].distance < 0.5*m[1].distance:
             good.append(m)
-    good = np.asarray(good)
+    good = np.asarray(matches)
     
     print(len(good))
     src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
