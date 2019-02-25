@@ -47,7 +47,7 @@ def merge_photo(bot, update):
 
 
 MAX_FEATURES = 500
-K = 4
+K = 2
 def warpImages(img1, img2, H):
     rows1, cols1 = img1.shape[:2]
     rows2, cols2 = img2.shape[:2]
@@ -89,9 +89,9 @@ def stitching_images(image1, image2):
             good.append(m)
     match = np.asarray(good)
     
-    if len(match[:,0]) >= 4:
-        src = np.float32([ kp1[m.queryIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
-        dst = np.float32([ kp2[m.trainIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
+    
+    src = np.float32([ kp1[m.queryIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
+    dst = np.float32([ kp2[m.trainIdx].pt for m in match[:,0] ]).reshape(-1,1,2)
 
     imMatches = cv2.drawMatchesKnn(image1, src, image2, dst, matches, None)    
 
