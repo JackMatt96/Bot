@@ -106,8 +106,7 @@ def find_match(image1, image2):
     # Apply ratio test
     good = []
     for m in matches:
-        print(m[1].distance, m[0].distance)
-        if (m[1].distance / m[0].distance) < goodRatio :
+        if (m[0].distance / m[1].distance) < goodRatio :
             good.append(m)
     
     assert len(good) >= 4, "Errore del cazzo: Too many corrispondences in the images"
