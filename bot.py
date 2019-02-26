@@ -100,8 +100,9 @@ def stitching_images(image1, image2):
             good.append(m)
     good = np.asarray(good)
     
-    shape(good)
-    shape(matches)
+    logger.debug(good.shape)
+    logger.debug(matches.shape)
+    
     if len(good) < 4:
         src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
         dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
@@ -125,7 +126,7 @@ if __name__ == "__main__":
 
     # Enable logging
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        level=logging.INFO)
+                        level=logging.DEBUG)
     logger = logging.getLogger(__name__)
 
     # Set up the Updater
