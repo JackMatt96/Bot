@@ -82,6 +82,15 @@ def warpImages(img1, img2, H):
 
 
 def stitching_images(image1, image2):
+    src, dst = find_match(image1, image2)
+    
+    imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)    
+
+    H, masked = cv2.findHomography(src, dst, cv2.RANSAC, 5.0)
+    
+    return imMatches, warpImages(image2, image1, H)
+    
+def find_match(image1, image2):
     img1 = cv2.cvtColor(image1,cv2.COLOR_BGR2GRAY)
     img2 = cv2.cvtColor(image2,cv2.COLOR_BGR2GRAY)
 
@@ -92,7 +101,6 @@ def stitching_images(image1, image2):
     bf = cv2.BFMatcher()
     matches = bf.knnMatch(des1, des2, K)
 
-    
     # Apply ratio test
     good = []
     for m in matches:
@@ -107,15 +115,10 @@ def stitching_images(image1, image2):
     if len(good) >= 4:
         src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
         dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
-    else:
-        logger.warning('Isufficient match points')
-
-    imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)    
-
-    H, masked = cv2.findHomography(src, dst, cv2.RANSAC, 5.0)
-    
-    return imMatches, warpImages(image2, image1, H)
-
+        return src, dst
+        
+    logger.warning('Isufficient match points')
+    return None, None
 
 if __name__ == "__main__":
     # Set these variable to the appropriate values
