@@ -1,4 +1,3 @@
-print('Start')
 import logging
 import os
 import cv2
@@ -7,19 +6,24 @@ import numpy as np
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
+MAX_FEATURES = 1500
+goodRatio = 1. / 1.5
+K = 2
+id = [None] * 2
+
 def start(bot, update):
     update.effective_message.reply_text("Hi!")
-    print('Comand /Start received')
+    logger.debug('Comand /Start received')
 
 def start_merge(bot, update):
     update.effective_message.reply_text("Starting merging session!")
     dp.add_handler(MessageHandler(Filters.photo, merge_photo))
-    print('Comand /Start_merge received')
+    logger.debug('Comand /Start_merge received')
 
 def stop_merge(bot, update):
     update.effective_message.reply_text("Stopping merging session!")
     dp.remove_handler(merge_photo)
-    print('Comand /Stop_merge received')
+    logger.debug('Comand /Stop_merge received')
 
 def replay(bot, update):
     update.effective_message.reply_text("Hai detto " +update.effective_message.text)
@@ -86,13 +90,16 @@ def stitching_images(image1, image2):
     # Apply ratio test
     good = []
     for m in matches:
-        if m[0].distance < 0.5*m[1].distance:
+        if (m[1].distance / m[0].distance) < goodRatio :
             good.append(m)
-    good = np.asarray(matches)
+    good = np.asarray(good)
     
-    print(len(good))
-    src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
-    dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
+    
+        if len(good) < 4:
+            src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
+            dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
+        else :
+            logger.warning('Isufficient match points')
 
     imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)    
 
@@ -100,9 +107,7 @@ def stitching_images(image1, image2):
     
     return imMatches, warpImages(image2, image1, H)
 
-MAX_FEATURES = 500
-K = 2
-id = [None] * 2
+
 if __name__ == "__main__":
     # Set these variable to the appropriate values
     TOKEN = os.environ.get('TELEGRAM_TOKEN')
@@ -136,4 +141,4 @@ if __name__ == "__main__":
                           url_path=TOKEN)
     updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
     updater.idle()
-    print('Ready')
+    logger.debug('Ready')
