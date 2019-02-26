@@ -45,17 +45,21 @@ def merge_photo(bot, update):
         File.download(id[1])
         logger.info('Downloaded' + str(id[0]))
 
-        toSendMatch, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
-        nameFile = 'Temp/' + str(update.effective_chat.id) + '.jpg'
-        nameFileMatch = 'Temp/' + str(update.effective_chat.id) + '_Match.jpg'
-        cv2.imwrite(nameFile, toSend)
-        cv2.imwrite(nameFileMatch, toSendMatch)
-        update.effective_message.reply_photo(photo = open(nameFile,'rb'))
-        update.effective_message.reply_photo(photo = open(nameFileMatch,'rb'))
+        try:
+            toSendMatch, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
+            nameFile = 'Temp/' + str(update.effective_chat.id) + '.jpg'
+            nameFileMatch = 'Temp/' + str(update.effective_chat.id) + '_Match.jpg'
+            cv2.imwrite(nameFile, toSend)
+            cv2.imwrite(nameFileMatch, toSendMatch)
+            update.effective_message.reply_photo(photo = open(nameFile,'rb'))
+            update.effective_message.reply_photo(photo = open(nameFileMatch,'rb'))
+            os.remove(nameFile)
+            os.remove(nameFileMatch)
+        except AssertionError as error::
+            logger.warning(error)
+            update.effective_message.reply_text("Images with too many corrispondences, please make photos more overlapped")
         os.remove(id[0])
         os.remove(id[1])
-        os.remove(nameFile)
-        os.remove(nameFileMatch)
         id = [None] * 2
 
 
@@ -82,9 +86,7 @@ def warpImages(img1, img2, H):
 
 
 def stitching_images(image1, image2):
-    src, dst = find_match(image1, image2)
-    
-    imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)    
+    src, dst, imMatches = find_match(image1, image2)
 
     H, masked = cv2.findHomography(src, dst, cv2.RANSAC, 5.0)
     
@@ -106,19 +108,14 @@ def find_match(image1, image2):
     for m in matches:
         if (m[1].distance / m[0].distance) < goodRatio :
             good.append(m)
-    good = np.asarray(good)
     
-    logger.info(len(good))
-    logger.info(len(good[0]))
-    logger.info(len(matches))
+    assert len(good) < 4, "Too many corrispondence in the images"
     
-    if len(good) >= 4:
-        src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
-        dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
-        return src, dst
-        
-    logger.warning('Isufficient match points')
-    return None, None
+    src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
+    dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
+    imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)
+    
+    return src, dst, imMatches
 
 if __name__ == "__main__":
     # Set these variable to the appropriate values
