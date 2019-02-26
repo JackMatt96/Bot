@@ -13,17 +13,17 @@ id = [None] * 2
 
 def start(bot, update):
     update.effective_message.reply_text("Hi!")
-    logger.debug('Comand /Start received')
+    logger.info('Comand /Start received')
 
 def start_merge(bot, update):
     update.effective_message.reply_text("Starting merging session!")
     dp.add_handler(MessageHandler(Filters.photo, merge_photo))
-    logger.debug('Comand /Start_merge received')
+    logger.info('Comand /Start_merge received')
 
 def stop_merge(bot, update):
     update.effective_message.reply_text("Stopping merging session!")
     dp.remove_handler(merge_photo)
-    logger.debug('Comand /Stop_merge received')
+    logger.info('Comand /Stop_merge received')
 
 def replay(bot, update):
     update.effective_message.reply_text("Hai detto " +update.effective_message.text)
@@ -38,12 +38,12 @@ def merge_photo(bot, update):
         id[0] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[0])
         File.download(id[0])
-        logger.debug('Downloaded' + str(id[0]))
+        logger.info('Downloaded' + str(id[0]))
     else:
         id[1] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[1])
         File.download(id[1])
-        logger.debug('Downloaded' + str(id[0]))
+        logger.info('Downloaded' + str(id[0]))
 
         toSendMatch, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
         nameFile = 'Temp/' + str(update.effective_chat.id) + '.jpg'
@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
     # Enable logging
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                        level=logging.DEBUG)
+                        level=logging.INFO)
     logger = logging.getLogger(__name__)
 
     # Set up the Updater
@@ -149,4 +149,4 @@ if __name__ == "__main__":
                           url_path=TOKEN)
     updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
     updater.idle()
-    logger.debug('Ready')
+    logger.info('Ready')
