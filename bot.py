@@ -100,8 +100,9 @@ def stitching_images(image1, image2):
             good.append(m)
     good = np.asarray(good)
     
-    logger.debug(len(good))
-    logger.debug(len(matches))
+    logger.info(len(good))
+    logger.info(len(good[0]))
+    logger.info(len(matches))
     
     if len(good) >= 4:
         src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
