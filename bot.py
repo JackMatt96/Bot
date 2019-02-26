@@ -100,13 +100,13 @@ def stitching_images(image1, image2):
             good.append(m)
     good = np.asarray(good)
     
-    logger.debug(good.shape)
-    logger.debug(matches.shape)
+    logger.debug(len(good))
+    logger.debug(len(matches))
     
-    if len(good) < 4:
+    if len(good) >= 4:
         src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
         dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
-    else :
+    else:
         logger.warning('Isufficient match points')
 
     imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)    
