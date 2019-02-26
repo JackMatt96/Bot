@@ -46,7 +46,7 @@ def merge_photo(bot, update):
         cv2.imwrite(nameFileMatch, toSendMatch)
         update.effective_message.reply_photo(photo = open(nameFile,'rb'))
         update.effective_message.reply_photo(photo = open(nameFileMatch,'rb'))
-        id = (None, None)
+        id = [None] * 2
 
 
 def warpImages(img1, img2, H):
