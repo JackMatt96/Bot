@@ -55,7 +55,7 @@ def merge_photo(bot, update):
             update.effective_message.reply_photo(photo = open(nameFileMatch,'rb'))
             os.remove(nameFile)
             os.remove(nameFileMatch)
-        except AssertionError as error::
+        except AssertionError as error:
             logger.warning(error)
             update.effective_message.reply_text("Images with too many corrispondences, please make photos more overlapped")
         os.remove(id[0])
@@ -109,7 +109,7 @@ def find_match(image1, image2):
         if (m[1].distance / m[0].distance) < goodRatio :
             good.append(m)
     
-    assert len(good) < 4, "Too many corrispondence in the images"
+    assert len(good) < 4, "Errore del cazzo: Too many corrispondences in the images"
     
     src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
     dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
