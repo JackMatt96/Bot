@@ -26,7 +26,7 @@ def stop_merge(bot, update):
     logger.info('Comand /Stop_merge received')
 
 def replay(bot, update):
-    update.effective_message.reply_text("Hai detto " +update.effective_message.text)
+    update.effective_message.reply_text("Hai detto: %s",update.effective_message.text)
 
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
@@ -38,12 +38,12 @@ def merge_photo(bot, update):
         id[0] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[0])
         File.download(id[0])
-        logger.info('Downloaded' + str(id[0]))
+        logger.info('Downloaded: %s', id[0])
     else:
         id[1] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[1])
         File.download(id[1])
-        logger.info('Downloaded' + str(id[0]))
+        logger.info('Downloaded: %s', id[1])
 
         try:
             toSendMatch, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
@@ -106,6 +106,7 @@ def find_match(image1, image2):
     # Apply ratio test
     good = []
     for m in matches:
+        print(m[1].distance, m[0].distance)
         if (m[1].distance / m[0].distance) < goodRatio :
             good.append(m)
     
