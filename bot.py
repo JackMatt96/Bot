@@ -38,10 +38,12 @@ def merge_photo(bot, update):
         id[0] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[0])
         File.download(id[0])
+        logger.debug('Downloaded' + str(id[0]))
     else:
         id[1] = 'Temp/'+str(File.file_id)+'.jpg'
         update.effective_message.reply_text(id[1])
         File.download(id[1])
+        logger.debug('Downloaded' + str(id[0]))
 
         toSendMatch, toSend = stitching_images(cv2.imread(id[0]), cv2.imread(id[1]))
         nameFile = 'Temp/' + str(update.effective_chat.id) + '.jpg'
@@ -50,6 +52,10 @@ def merge_photo(bot, update):
         cv2.imwrite(nameFileMatch, toSendMatch)
         update.effective_message.reply_photo(photo = open(nameFile,'rb'))
         update.effective_message.reply_photo(photo = open(nameFileMatch,'rb'))
+        os.remove(id[0])
+        os.remove(id[1])
+        os.remove(nameFile)
+        os.remove(nameFileMatch)
         id = [None] * 2
 
 
@@ -94,7 +100,8 @@ def stitching_images(image1, image2):
             good.append(m)
     good = np.asarray(good)
     
-    
+    shape(good)
+    shape(matches)
     if len(good) < 4:
         src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
         dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
