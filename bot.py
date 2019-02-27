@@ -7,7 +7,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
 MAX_FEATURES = 2000
-goodRatio = 1. / 1.2
+goodRatio = 1. / 1.5
 K = 2
 id = [None] * 2
 
