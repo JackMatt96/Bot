@@ -6,7 +6,7 @@ import numpy as np
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
-MAX_FEATURES = 2000
+MAX_FEATURES = 500
 goodRatio = 1. / 1.5
 K = 2
 id = [None] * 2
