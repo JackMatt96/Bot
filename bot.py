@@ -6,8 +6,8 @@ import numpy as np
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
-MAX_FEATURES = 500
-goodRatio = 1. / 1.5
+MAX_FEATURES = 2000
+goodRatio = 1. / 1.2
 K = 2
 id = [None] * 2
 
@@ -109,9 +109,9 @@ def find_match(image1, image2):
         if (m[0].distance / m[1].distance) < goodRatio :
             good.append(m)
     
-    assert len(good) >= 20, "Errore del cazzo: Too many corrispondences in the images"
+    assert len(good) >= 50, "Errore del cazzo: Too many corrispondences in the images" + str(len(good))
     good.sort(key=lambda x: x[0].distance)
-    del good[20:]
+    del good[50:]
     
     
             
