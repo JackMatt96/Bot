@@ -107,15 +107,19 @@ def find_match(image1, image2):
     good = []
     for m in matches:
         if (m[0].distance / m[1].distance) < goodRatio :
-            good.append(m)
+            good.append(m[0])
     
     assert len(good) >= 4, "Errore del cazzo: Too many corrispondences in the images"
+    if len(good) > 20:
+        good.sort(key=lambda x: x.distance)
+        del good[20:]
+    
+    
             
     imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)
-    good = np.asarray(good)
-    
-    src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
-    dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0] ]).reshape(-1,1,2)
+
+    src = np.float32([ kp1[m.queryIdx].pt for m in good]).reshape(-1,1,2)
+    dst = np.float32([ kp2[m.trainIdx].pt for m in good]).reshape(-1,1,2)
     
     
     return src, dst, imMatches
