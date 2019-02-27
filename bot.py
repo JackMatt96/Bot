@@ -10,6 +10,7 @@ MAX_FEATURES = 2000
 goodRatio = 1. / 1.5
 K = 2
 id = [None] * 2
+minCorrispondence = 20
 
 def start(bot, update):
     update.effective_message.reply_text("Hi!")
@@ -109,9 +110,9 @@ def find_match(image1, image2):
         if (m[0].distance / m[1].distance) < goodRatio :
             good.append(m)
     
-    assert len(good) >= 50, "Errore del cazzo: Too many corrispondences in the images" + str(len(good))
+    assert len(good) >= minCorrispondence, "Errore del cazzo: Too many corrispondences in the images\n Point matching good: %d/%d", str(len(good)), minCorrispondence
     good.sort(key=lambda x: x[0].distance)
-    del good[50:]
+    del good[minCorrispondence:]
     
     
             
