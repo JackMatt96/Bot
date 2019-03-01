@@ -13,7 +13,8 @@ id = [None] * 2
 minCorrispondence = 20
 
 def start(bot, update):
-    update.effective_message.reply_text("Hi!")
+    keyboard = replayKeyboardMArkup([['/start'],['/start_merge'],['/stop_merge']])
+    update.effective_message.reply_text("Hi!",reply_markup = keyboard)
     logger.info('Comand /Start received')
 
 def start_merge(bot, update):
@@ -103,7 +104,6 @@ def find_match(image1, image2):
     
     bf = cv2.BFMatcher()
     matches = bf.knnMatch(des1, des2, K)
-
     # Apply ratio test
     good = []
     for m in matches:
@@ -113,16 +113,16 @@ def find_match(image1, image2):
     assert len(good) >= minCorrispondence, "Errore del cazzo: Too many corrispondences in the images. Point matching good: " + str(len(good)) + "/" + str(minCorrispondence)
     good.sort(key=lambda x: x[0].distance)
     del good[minCorrispondence:]
-    
-    
             
     imMatches = cv2.drawMatchesKnn(image1, kp1, image2, kp2, good, None)
     good = np.asarray(good)
     src = np.float32([ kp1[m.queryIdx].pt for m in good[:,0]]).reshape(-1,1,2)
     dst = np.float32([ kp2[m.trainIdx].pt for m in good[:,0]]).reshape(-1,1,2)
-    
-    
     return src, dst, imMatches
+
+
+
+
 
 if __name__ == "__main__":
     # Set these variable to the appropriate values
@@ -141,9 +141,9 @@ if __name__ == "__main__":
     updater = Updater(TOKEN)
     dp = updater.dispatcher
     # Add handlers
-    dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(CommandHandler('start_merge', start_merge))
-    dp.add_handler(CommandHandler('stop_merge', stop_merge))
+    dp.add_handler(CommandHandler('Start', start))
+    dp.add_handler(CommandHandler('Start_merge', start_merge))
+    dp.add_handler(CommandHandler('Stop_merge', stop_merge))
     
     dp.add_handler(MessageHandler(Filters.text, replay)) 
     dp.add_error_handler(error)
