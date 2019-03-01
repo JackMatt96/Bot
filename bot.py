@@ -13,7 +13,7 @@ id = [None] * 2
 minCorrispondence = 20
 
 def start(bot, update):
-    keyboard = ReplyKeyboardMarkup([['/start'],['/start_merge'],['/stop_merge']])
+    keyboard = telegram.ReplyKeyboardMarkup([['/start'],['/start_merge'],['/stop_merge']])
     update.effective_message.reply_text("Hi!",reply_markup = keyboard)
     logger.info('Comand /Start received')
 
