@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-
+from telegram import KeyboardButton, ReplyKeyboardMarkup
 
 MAX_FEATURES = 2000
 goodRatio = 1. / 1.5
@@ -13,7 +13,7 @@ id = [None] * 2
 minCorrispondence = 20
 
 def start(bot, update):
-    keyboard = telegram.ReplyKeyboardMarkup([['/start'],['/start_merge'],['/stop_merge']])
+    keyboard = ReplyKeyboardMarkup([['/start'],['/start_merge'],['/stop_merge']], resize_keyboard=True)
     update.effective_message.reply_text("Hi!",reply_markup = keyboard)
     logger.info('Comand /Start received')
 
