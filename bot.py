@@ -110,7 +110,7 @@ def find_match(image1, image2):
         if (m[0].distance / m[1].distance) < goodRatio :
             good.append(m)
     
-    assert len(good) >= minCorrispondence, "Errore del cazzo: Too many corrispondences in the images\n Point matching good: " + str(len(good)) + "/" + str(minCorrispondence)
+    assert len(good) >= minCorrispondence, "Errore del cazzo: Too many corrispondences in the images. Point matching good: " + str(len(good)) + "/" + str(minCorrispondence)
     good.sort(key=lambda x: x[0].distance)
     del good[minCorrispondence:]
     
